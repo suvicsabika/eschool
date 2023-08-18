@@ -144,5 +144,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'eschooldjangoapp@gmail.com'  # Replace with your Gmail email
-EMAIL_HOST_PASSWORD = 'Monitor11'  # Replace with your Gmail password or app-specific password
+EMAIL_HOST_USER = 'example@gmail.com'  # Replace with your Gmail email
+EMAIL_HOST_PASSWORD = 'example'  # Replace with your Gmail password or app-specific password
