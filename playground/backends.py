@@ -7,16 +7,18 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 class PeopleAuthenticationBackend(ModelBackend):
-    def authenticate(self, request, email=None, password=None, **kwargs):
+    def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            student = People.objects.get(email=email)
+            student = People.objects.get(username=username)
             if check_password(password, student.password):  # Compare hashed passwords
                 student.backend = self.__class__.__module__ + '.' + self.__class__.__name__
                 return student
+            else:
+                return None  # Authentication failure (wrong password)
         except People.DoesNotExist:
-            return None
+            return None  # User not found
 
-    #Currently not working due Google privacy issues, TODO...
+    #Currently not working due to Google privacy issues, TODO...
     def generate_reset_token(email):
         signer = TimestampSigner()
         token = signer.sign(email)

@@ -35,19 +35,19 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <form method="POST">
+                    <form method="POST" action="{% url 'login' %}">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="{{ form.username.id_for_label }}" class="form-label">Email address</label>
-                            <input type="email" name="{{ form.username.name }}" class="form-control" id="{{ form.username.id_for_label }}">
+                            <label for="username" class="form-label">Email address</label>
+                            <input type="email" name="{{ form.username.name }}" class="form-control" id="username">
                         </div>
                         <div class="mb-3">
-                            <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
-                            <input type="password" name="{{ form.password.name }}" class="form-control" id="{{ form.password.id_for_label }}">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" name="{{ form.password.name }}" class="form-control" id="password">
                         </div>                        
                         <button type="submit" class="btn btn-primary" aria-describedby="login-help">Login</button>
                         <div id="login-help" class="form-text">Forgot your password? <a href="{% url 'forgot' %}">Click here to reset your password!</a></div>
-                    </form>
+                    </form>                    
                     <hr>
                     <p>Dont have an account yet? Register here as a student:</p>
                     <a href="{% url 'register' %}" class="btn btn-success">Sign up</a>

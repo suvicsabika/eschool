@@ -42,7 +42,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'eschool.urls'
@@ -132,8 +132,8 @@ INTERNAL_IPS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'playground.backends.StudentAuthenticationBackend',  # Use your app name here
-    'django.contrib.auth.backends.ModelBackend',
+    #'playground.backends.PeopleAuthenticationBackend'  # Use your app name here
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 BASE_URL = 'http://localhost:8000'  # Replace with the actual base URL of your application
@@ -144,5 +144,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'eschooldjangoapp@gmail.com'  # Replace with your Gmail email
-EMAIL_HOST_PASSWORD = 'Monitor11'  # Replace with your Gmail password or app-specific password
+EMAIL_HOST_USER = 'example@gmail.com'  # Replace with your Gmail email
+EMAIL_HOST_PASSWORD = 'example'  # Replace with your Gmail password or app-specific password
+
+LOGIN_URL = '/playground/login/'

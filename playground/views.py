@@ -5,12 +5,11 @@ from .forms import PeopleRegistrationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
-from django.shortcuts import render
 from .backends import PeopleAuthenticationBackend  # Import your authentication backend
-from .models import People
+from .models import People, Course, Assignment
 
 def login_view(request):
     if request.method == 'POST':
@@ -18,10 +17,11 @@ def login_view(request):
         entered_email = request.POST.get('username')  # Get the email entered in the form
         password = request.POST.get('password')  # Get the password entered in the form
         user = PeopleAuthenticationBackend()
-        founduser = user.authenticate(request, email=entered_email, password=password)
+        founduser = user.authenticate(request, username=entered_email, password=password)
         if founduser is not None:
             login(request, founduser)
-            return HttpResponse("Welcome in!")
+            if founduser.role == 'Student':
+                return redirect('main')
     else:
         form = AuthenticationForm()
 
@@ -57,3 +57,16 @@ def forgot_view(request):
             pass
 
     return render(request, 'forgot.html')
+
+#@login_required(login_url='/playground/login/')
+def main_view(request):
+    user = People.objects.get(username="kerybalint@gmail.com")
+    enrolled_courses = user.courses_enrolled.all()
+    assignments = Assignment.objects.filter(course__in=enrolled_courses)
+    context = {'name': user.last_name + ' ' + user.first_name, 'enrolled_courses': enrolled_courses, 'assignments' : assignments}
+    return render(request, 'student_main.html', context)
+
+#@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('login')

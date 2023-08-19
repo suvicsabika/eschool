@@ -11,7 +11,7 @@ class PeopleRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = People
-        fields = ['first_name', 'last_name', 'dateofbirth', 'email', 'password', 'password_again']
+        fields = ['first_name', 'last_name', 'dateofbirth', 'username', 'password', 'password_again']
         
     def clean(self):
         cleaned_data = super().clean()
