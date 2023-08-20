@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .models import People
+from .models import People, Course, Assignment
 from django.contrib.auth.hashers import make_password
 
 class PeopleRegistrationForm(forms.ModelForm):
@@ -28,3 +28,23 @@ class PeopleRegistrationForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+class TeacherCreateCourse(forms.ModelForm):
+    title = forms.CharField(max_length=100)
+    description = forms.CharField()
+
+    class Meta:
+        model = Course
+        fields = ['title', 'description']
+        
+        
+class TeacherCreateWork(forms.ModelForm):
+    title = forms.CharField(max_length=100)
+    description = forms.CharField()
+    course = forms.Select()
+    due_date = forms.DateField()
+    points = forms.NumberInput()
+    
+    class Meta:
+        model = Assignment
+        fields = ['course', 'due_date', 'points', 'title', 'description']

@@ -14,12 +14,12 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-light sticky-top">
-        <div class="container-fluid">
+        <div class="container">
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="#">ESchool - Teacher's main</a>
+            <a class="navbar-brand" href="#">ESchool - Teacher's</a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Mainpage</a>
@@ -31,7 +31,7 @@
             <img src="https://github.com/suvicsabika.png" alt="" width="32" height="32"
             class="rounded-circle me-2">
             <h5>{{ name }} - Teacher</h5>
-            <button class="btn btn-secondary">Logout</button>
+            <a href="{% url 'logout' %}"><button class="btn btn-secondary">Logout</button></a>
           </div>
         </div>
       </nav>
@@ -39,14 +39,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-3">
-                <div id="sidebar" class="d-flex flex-column flex-shrink-0 bg-light sidebar collapse show-lg sticky-top" style="width: 280px;">
-                    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                        <svg class="bi me-2" width="40" height="32">
-                            <use xlink:href="#bootstrap"></use>
-                        </svg>
-                        <span class="fs-4">ESchool Teacher's Main Page</span>
-                    </a>
-                    <hr>
+                <div id="sidebar" class="d-flex flex-column flex-shrink-0 bg-light sidebar collapse show-lg" style="width: 280px;">
                     <p>The assigments that you gave to the students:</p>
                     <ul class="nav nav-pills flex-column mb-auto">
                         {% for assignment in assigments %}
@@ -65,14 +58,14 @@
                 <div class="row">
                     <div class="col-5" style="border-right: solid gray 1px">
                         <h1>Assign course work for your studens or tell them important messages:</h1>
-                        <button class="btn btn-primary">Add course work</button>
+                        <a href="{% url 'teacher_create_work' %}"><button class="btn btn-primary">Add course work</button></a>
                     </div>
                     <div class="col-1">
                         <h1>Or</h1>
                     </div>
                     <div class="col-5" style="border-left: solid gray 1px">
                         <h1>Create courses for students to join in</h1>
-                        <button class="btn btn-success">Create course</button>
+                        <a href="{% url 'teacher_create_course' %}"><button class="btn btn-success">Create course</button></a>
                     </div>
                 </div>
                 <hr>
@@ -84,6 +77,7 @@
                       <div class="card-body">
                         <h5 class="card-title">{{ course.title }}</h5>
                         <p class="card-text">{{ course.description }}</p>
+                        <p class="card-text">Course code: {{ course.course_id }} </p>
                       </div>
                       <div class="card-footer">
                         <small class="text-muted">Last checked in x time ago.</small>

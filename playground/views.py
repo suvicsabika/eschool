@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse
-from .forms import PeopleRegistrationForm
+from .forms import PeopleRegistrationForm, TeacherCreateCourse, TeacherCreateWork
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
 from .backends import PeopleAuthenticationBackend  # Import your authentication backend
 from .models import People, Course, Assignment
+from datetime import date
+from django.db.models import Q
 
 def login_view(request):
     if request.method == 'POST':
@@ -77,6 +78,62 @@ def logout_view(request):
 def teacher_main_view(request):
     teacher = People.objects.get(username="tester1@gmail.com")#TODO...
     teacher_courses = Course.objects.filter(teacher=teacher)
-    assignments = Assignment.objects.filter(course__in=teacher_courses)
-    context = {'name': teacher.last_name + ' ' + teacher.first_name, 'teacher_courses': teacher_courses, 'assigments': assignments}
+    today = date.today()
+    future_assignments = Assignment.objects.filter(
+        Q(course__in=teacher_courses) & Q(due_date__gte=today)
+    )
+    context = {'name': teacher.last_name + ' ' + teacher.first_name, 'teacher_courses': teacher_courses, 'assigments': future_assignments}
     return render(request, 'teacher_main.html', context)
+
+#@login_required
+def teacher_create_course_view(request):
+    teacher = People.objects.get(username="tester1@gmail.com")#TODO...
+    created = False
+    course_id = None
+    print("We got a request! :)")
+    if request.method == 'POST':
+        form = TeacherCreateCourse(request.POST)
+        print("We are experiencing a POST request!")
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            new_course = new_course = Course(title=title, description=description, teacher=teacher)
+            new_course.save()
+            print("Course created successfully!")
+            created = True
+            course_id = new_course.course_id
+        else:
+            print("The form is not valid!")
+            print(form.errors)
+    else:
+        form = TeacherCreateCourse()        
+    
+    context = {'form' : form, 'name' : teacher.first_name + ' ' + teacher.last_name, 'created' : created, 'course_id' : course_id}
+    return render(request, 'teacher_create_course.html', context)
+
+#@login_required
+#TODO: THe course's ID needed in the form, not the course's title, the ForgeinKey is an ID!
+def teacher_create_work_view(request):
+    print("We got a request! :)")
+    teacher = People.objects.get(username="tester1@gmail.com")#TODO...
+    teacher_courses = Course.objects.filter(teacher=teacher)
+    if request.method == "POST":
+        print("We are experiencing a POST request!")
+        form = TeacherCreateWork(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            description = form.cleaned_data["description"]
+            due_date = form.cleaned_data["due_date"]
+            points = form.cleaned_data["points"]
+            course = form.cleaned_data["course"]
+            new_assigment = Assignment(course=course, assignment=assignment, points=points, description=description, due_date=due_date)
+            new_assigment.save()
+            print("Assignment created successfully!")
+        else:
+            print(form.errors)
+            print("The form is not valid!")
+    else:
+        form = TeacherCreateWork()
+        
+    context = {'form': form, 'name' : teacher.last_name + ' ' + teacher.first_name, 'courses': teacher_courses}
+    return render(request, 'teacher_create_work.html', context)
