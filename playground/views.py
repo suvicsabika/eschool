@@ -22,6 +22,8 @@ def login_view(request):
             login(request, founduser)
             if founduser.role == 'Student':
                 return redirect('main')
+            else:
+                return redirect('teacher_main')
     else:
         form = AuthenticationForm()
 
@@ -60,7 +62,7 @@ def forgot_view(request):
 
 #@login_required(login_url='/playground/login/')
 def main_view(request):
-    user = People.objects.get(username="kerybalint@gmail.com")
+    user = People.objects.get(username="kerybalint@gmail.com")#TODO...
     enrolled_courses = user.courses_enrolled.all()
     assignments = Assignment.objects.filter(course__in=enrolled_courses)
     context = {'name': user.last_name + ' ' + user.first_name, 'enrolled_courses': enrolled_courses, 'assignments' : assignments}
@@ -70,3 +72,11 @@ def main_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+#@login_required
+def teacher_main_view(request):
+    teacher = People.objects.get(username="tester1@gmail.com")#TODO...
+    teacher_courses = Course.objects.filter(teacher=teacher)
+    assignments = Assignment.objects.filter(course__in=teacher_courses)
+    context = {'name': teacher.last_name + ' ' + teacher.first_name, 'teacher_courses': teacher_courses, 'assigments': assignments}
+    return render(request, 'teacher_main.html', context)
